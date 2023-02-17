@@ -337,7 +337,7 @@ class TrigReader(object):
                 det.set_active_time_interval(*intervals)
         else:
             for name, det in self._time_series.items():
-                if name == det_sel_el:
+                if name == det_sel:
                     det.set_active_time_interval(*intervals)
 
     def to_plugin(self, *detectors):
