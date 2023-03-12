@@ -313,11 +313,7 @@ class TrigReader(object):
         if return_plots:
             return plots
 
-<<<<<<< HEAD
-    def set_background_selections(self, *intervals, det_sel = None):
-=======
     def set_background_selections(self, *intervals, det_sel=None):
->>>>>>> d762c62cb8b52ce8153d4c1fe7144362b114b7b7
         """
         set the background selections for all detection
         :param intervals: str of intervals
@@ -330,15 +326,9 @@ class TrigReader(object):
         else:
             for name, det in self._time_series.items():
                 if name == det_sel:
-<<<<<<< HEAD
-                    det.set_background_interval(*intervals, unbinned=False) 
-                    
-    def set_active_time_interval(self, *intervals, det_sel = None):
-=======
                     det.set_background_interval(*intervals, unbinned=False)
 
     def set_active_time_interval(self, *intervals, det_sel=None):
->>>>>>> d762c62cb8b52ce8153d4c1fe7144362b114b7b7
         """
         set the selection for all intervals
         :param intervals:
