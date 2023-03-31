@@ -173,7 +173,7 @@ class BkgFittingTrigdat(object):
         bkg_fit_dict["use_dets"] = self._use_dets
         bkg_fit_dict["bkg_fit_files"] = self._bkg_fits_files
         bkg_fit_dict["lightcurve_plots"] = self._lightcurve_plots
-        
+
         with open(path, "w") as outfile:
             yaml.dump(bkg_fit_dict, outfile, default_flow_style=False)
 
@@ -316,7 +316,8 @@ class BkgFittingTTE(object):
                 container_type=BinnedSpectrumWithDispersion,
             )
 
-            ts.set_background_interval(background_time_neg, background_time_pos)
+            ts.set_background_interval(
+                background_time_neg, background_time_pos)
             ts.set_active_time_interval(active_time)
             det_ts.append(ts)
 
