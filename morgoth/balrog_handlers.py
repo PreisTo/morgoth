@@ -164,6 +164,8 @@ class RunBalrogTTE(ExternalProgramTask):
             "mpiexec",
             f"-n",
             f"{n_cores_multinest}",
+            "-bind-to",
+            "core:1",
             f"{path_to_python}",
             f"{fit_script_path}",
             f"{self.grb_name}",
@@ -173,14 +175,16 @@ class RunBalrogTTE(ExternalProgramTask):
             f"{self.input()['time_selection'].path}",
             f"tte",
         ]
+        
         return command
 
 
 class RunBalrogTrigdat(ExternalProgramTask):
     grb_name = luigi.Parameter()
     version = luigi.Parameter(default="v00")
-    always_log_stderr = True
-
+    always_log_stderr = False
+    capture_output = False
+    
     def requires(self):
         return {
             "trigdat_file": DownloadTrigdat(
@@ -216,6 +220,8 @@ class RunBalrogTrigdat(ExternalProgramTask):
             "mpiexec",
             f"-n",
             f"{n_cores_multinest}",
+            "-bind-to",
+            "core:1",
             f"{path_to_python}",
             f"{fit_script_path}",
             f"{self.grb_name}",
@@ -225,4 +231,5 @@ class RunBalrogTrigdat(ExternalProgramTask):
             f"{self.input()['time_selection'].path}",
             f"trigdat",
         ]
+        
         return command
