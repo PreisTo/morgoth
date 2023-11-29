@@ -72,6 +72,7 @@ class MultinestFitTrigdat(object):
         self._bkg_fit_yaml_file = bkg_fit_yaml_file
         self._time_selection_yaml_file = time_selection_yaml_file
 
+    def setup_essentials(self):
         # Load yaml information
         with open(self._bkg_fit_yaml_file, "r") as f:
             data = yaml.safe_load(f)
@@ -351,7 +352,9 @@ class MultinestFitTTE(object):
         self._version = version
         self._bkg_fit_yaml_file = bkg_fit_yaml_file
         self._time_selection_yaml_file = time_selection_yaml_file
+        self._trigdat_file = trigdat_file
 
+    def setup_essentials(self):
         # Load yaml information
         with open(self._bkg_fit_yaml_file, "r") as f:
             data = yaml.safe_load(f)
@@ -363,8 +366,6 @@ class MultinestFitTTE(object):
 
             self._active_time_start = data["active_time"]["start"]
             self._active_time_stop = data["active_time"]["stop"]
-
-        self._trigdat_file = trigdat_file
 
         self._set_plugins()
         self._define_model()
