@@ -218,6 +218,7 @@ class TimeSelectionKnown(TimeSelection):
 class TimeSelectionBB(TimeSelection):
     """Automatically sets active trigger time as well as neg and pos (before and after trigger) background"""
 
+    # TODO check if times are in correct order
     def __init__(
         self,
         grb_name,
