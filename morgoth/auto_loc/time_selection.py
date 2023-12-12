@@ -218,7 +218,6 @@ class TimeSelectionKnown(TimeSelection):
 class TimeSelectionBB(TimeSelection):
     """Automatically sets active trigger time as well as neg and pos (before and after trigger) background"""
 
-    # TODO check if times are in correct order
     def __init__(
         self,
         grb_name,
@@ -237,6 +236,7 @@ class TimeSelectionBB(TimeSelection):
             gamma (float, optional): gamma value for bayesian blocks (influences number of blocks). Defaults to 0.776.
             mean_factor (float, optional): factor scaling the mean cps rate used for ruling out too long selections
         """
+        print(f"Starting TimeSelection using Astrop's Bayesian Block Algorithm")
         self._fine = fine
         self._trigdat_file = trigdat_file
 
