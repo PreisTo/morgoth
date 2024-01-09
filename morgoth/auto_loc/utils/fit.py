@@ -59,6 +59,7 @@ class MultinestFitTrigdat(object):
         trigdat_file,
         bkg_fit_yaml_file,
         time_selection_yaml_file,
+        **kwargs,
     ):
         """
         Initalize MultinestFit for Balrog
@@ -71,6 +72,7 @@ class MultinestFitTrigdat(object):
         self._version = version
         self._bkg_fit_yaml_file = bkg_fit_yaml_file
         self._time_selection_yaml_file = time_selection_yaml_file
+        self._spectrum_type = kwargs.get("spectrum", "cpl")
 
     def setup_essentials(self):
         # Load yaml information
@@ -90,7 +92,7 @@ class MultinestFitTrigdat(object):
         self._trigdat_file = trigdat_file
 
         self._set_plugins()
-        self._define_model()
+        self._define_model(self._spectrum_type)
 
     def _set_plugins(self):
         """
