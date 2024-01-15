@@ -72,7 +72,7 @@ class MultinestFitTrigdat(object):
         self._version = version
         self._bkg_fit_yaml_file = bkg_fit_yaml_file
         self._time_selection_yaml_file = time_selection_yaml_file
-        self._spectrum_type = kwargs.get("spectrum", "cpl")
+        self._spectrum_model = kwargs.get("spectrum", "cpl")
         self._trigdat_file = trigdat_file
 
     def setup_essentials(self):
@@ -91,7 +91,7 @@ class MultinestFitTrigdat(object):
             self._fine = data["fine"]
 
         self._set_plugins()
-        self._define_model(self._spectrum_type)
+        self._define_model(self._spectrum_model)
 
     def _set_plugins(self):
         """
