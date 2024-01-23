@@ -84,9 +84,13 @@ class ResultReader(object):
         self._read_trigdat_file(trigdat_file)
 
         # Check the GCN Archive for the GRB letter
-        self._grb_name_gcn = check_letter(
-            trigger_number=self._trigger_number, grb_name=self.grb_name
-        )
+        try:
+            self._grb_name_gcn = check_letter(
+                trigger_number=self._trigger_number, grb_name=self.grb_name
+            )
+        except Exception as e:
+            print(e)
+            self._grb_name_gcn = "???"
 
         # Check catalog of bright gamma sources and get separation to GRB position
         self._sep_bright_sources()
@@ -592,7 +596,7 @@ def check_letter(trigger_number, grb_name):
     grbs = []
     # iterate over the entries
     for x in ls:
-        if g.strip("GRB")[:-3] in x:
+        if grb_name.strip("GRB")[:-3] in x:
             grbs.append(x.strip("},"))
     # get the gcn numbers for all grb notices
     gcn_ids = []
