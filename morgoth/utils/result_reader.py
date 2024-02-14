@@ -637,13 +637,13 @@ def check_letter(trigger_number, grb_name):
                     print("WTF", data)
     # if we do not have any grbs from today we assume it's the first one
     if len(grbs_today) == 0:
-        return grb_name[:-3] + "A?"
+        return grb_name[:-3] + "A???"
     else:
         # otherwise we add one to the last mentioned letter
         gt = sorted(grbs_today)
         last = gt[-1]
         last_index = the_alphabet.index(last)
-        return grb_name[:-3] + the_alphabet[last_index + 1].upper() + "?"
+        return grb_name[:-3] + the_alphabet[last_index + 1].upper() + "???"
 
 
 def get_best_fit_with_errors(post_equal_weigts_file, model):
