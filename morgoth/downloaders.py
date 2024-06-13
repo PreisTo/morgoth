@@ -4,6 +4,9 @@ import time
 import luigi
 import yaml
 
+import urllib.request
+from urllib.error import HTTPError
+
 from morgoth.configuration import morgoth_config
 from morgoth.trigger import GBMTriggerFile, OpenGBMFile
 from morgoth.utils import file_utils
@@ -11,6 +14,22 @@ from morgoth.utils.download_file import BackgroundDownload
 from morgoth.utils.env import get_env_value
 
 base_dir = get_env_value("GBM_TRIGGER_DATA_DIR")
+lu = [
+    "n0",
+    "n1",
+    "n2",
+    "n3",
+    "n4",
+    "n5",
+    "n6",
+    "n7",
+    "n8",
+    "n9",
+    "na",
+    "nb",
+    "b0",
+    "b1",
+]
 
 
 class GatherTrigdatDownload(luigi.Task):
@@ -112,7 +131,10 @@ class DownloadTTEFile(luigi.Task):
     detector = luigi.Parameter()
 
     def requires(self):
-        return OpenGBMFile(grb=self.grb_name)
+        return {
+            "gbm_file": OpenGBMFile(grb=self.grb_name),
+            "tte_files_avail": DownloadTTEResources(grb=self.grb_name),
+        }
 
     def output(self):
         tte = f"glg_tte_{self.detector}_bn{self.grb_name[3:]}_{self.version}.fit"
@@ -154,7 +176,10 @@ class DownloadCSPECFile(luigi.Task):
     detector = luigi.Parameter()
 
     def requires(self):
-        return OpenGBMFile(grb=self.grb_name)
+        return {
+            "gbm_file": OpenGBMFile(grb=self.grb_name),
+            "tte_files_avail": DownloadTTEResources(grb=self.grb_name),
+        }
 
     def output(self):
         cspec = f"glg_cspec_{self.detector}_bn{self.grb_name[3:]}_{self.version}.pha"
@@ -184,3 +209,49 @@ class DownloadCSPECFile(luigi.Task):
             ),
         )
         dl.run()
+
+
+class DownloadTTEResources(luigi.Task):
+    resources = {"max_workers": 1}
+    priority = 100
+    grb_name = luigi.Parameter()
+    version = luigi.Parameter(default="v01")
+    detector = luigi.Parameter()
+
+    def requires(self):
+        return OpenGBMFile(grb=self.grb_name)
+
+    def output(self):
+        return luigi.LocalTarget(
+            os.path.join(base_dir, self.grb_name, "tte_cspec_avail.txt")
+        )
+
+    def run(self):
+        base_url = f"https://heasarc.gsfc.nasa.gov/FTP/fermi/data/gbm/triggers/20{self.grb_name.strip('GRB')[:2]}/bn{self.grb_name.strip('GRB')}/current/"
+        missing_tte = lu
+        missing_cspec = lu
+        start = time.time()
+        while len(missing_tte) > 0 and len(missing_cspec) > 0:
+            for d in lu:
+                if d in missing_tte:
+                    url = (
+                        base_url + f"glg_tte_{d}_bn{self.grb_name.strip('GRB')}_v00.fit"
+                    )
+                    try:
+                        urllib.request.urlopen(url)
+                        missing_tte.pop(d)
+                    except HTTPError:
+                        pass
+                if d in missing_cspec:
+                    url = (
+                        base_url
+                        + f"glg_cspec_{d}_bn{self.grb_name.strip('GRB')}_v00.pha"
+                    )
+                    try:
+                        urllib.request.urlopen(url)
+                        missing_cspec.pop(d)
+                    except HTTPError:
+                        pass
+            time.sleep(180)
+        with self.output().open("w+") as f:
+            f.write(str(time.time() - start))
