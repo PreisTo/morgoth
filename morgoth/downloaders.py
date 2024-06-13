@@ -215,8 +215,6 @@ class DownloadTTEResources(luigi.Task):
     resources = {"max_workers": 1}
     priority = 100
     grb_name = luigi.Parameter()
-    version = luigi.Parameter(default="v01")
-    detector = luigi.Parameter()
 
     def requires(self):
         return OpenGBMFile(grb=self.grb_name)
