@@ -43,6 +43,7 @@ def handler(payload, root):
             "a+",
         ) as f:
             f.write(str(grb) + "\n")
+    pass
 
 
 def form_morgoth_cmd_string(grb):
