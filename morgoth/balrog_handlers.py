@@ -9,7 +9,11 @@ from morgoth.bkg_fit_handler import (
     BackgroundFitTrigdat,
 )
 from morgoth.configuration import morgoth_config
-from morgoth.downloaders import DownloadTrigdat, GatherTrigdatDownload
+from morgoth.downloaders import (
+    DownloadTrigdat,
+    GatherTrigdatDownload,
+    DownloadTTEResources,
+)
 from morgoth.exceptions.custom_exceptions import UnkownReportType
 from morgoth.time_selection_handler import TimeSelectionHandler
 from morgoth.trigger import OpenGBMFile
@@ -56,6 +60,7 @@ class ProcessFitResults(luigi.Task):
         if self.report_type.lower() == "tte":
             return {
                 "trigdat_version": GatherTrigdatDownload(grb_name=self.grb_name),
+                "tte_resources": DownloadTTEResources(grb_name=self.grb_name),
                 "gbm_file": OpenGBMFile(grb=self.grb_name),
                 "time_selection": TimeSelectionHandler(
                     grb_name=self.grb_name, version=self.version, report_type="tte"
@@ -188,7 +193,7 @@ class RunBalrogTTE(ExternalProgramTask):
             f"{self.input()['time_selection'].path}",
             f"tte",
         ]
-        
+
         return command
 
 
@@ -247,5 +252,5 @@ class RunBalrogTrigdat(ExternalProgramTask):
             f"{self.input()['time_selection'].path}",
             f"trigdat",
         ]
-        
+
         return command
