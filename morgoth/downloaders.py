@@ -133,7 +133,7 @@ class DownloadTTEFile(luigi.Task):
     def requires(self):
         return {
             "gbm_file": OpenGBMFile(grb=self.grb_name),
-            "tte_files_avail": DownloadTTEResources(grb=self.grb_name),
+            "tte_files_avail": DownloadTTEResources(grb_name=self.grb_name),
         }
 
     def output(self):
@@ -143,7 +143,7 @@ class DownloadTTEFile(luigi.Task):
         )
 
     def run(self):
-        info = GBMTriggerFile.from_file(self.input())
+        info = GBMTriggerFile.from_file(self.input()["gbm_file"])
 
         print(info)
 
@@ -178,7 +178,7 @@ class DownloadCSPECFile(luigi.Task):
     def requires(self):
         return {
             "gbm_file": OpenGBMFile(grb=self.grb_name),
-            "tte_files_avail": DownloadTTEResources(grb=self.grb_name),
+            "tte_files_avail": DownloadTTEResources(grb_name=self.grb_name),
         }
 
     def output(self):
@@ -188,9 +188,8 @@ class DownloadCSPECFile(luigi.Task):
         )
 
     def run(self):
-        info = GBMTriggerFile.from_file(self.input())
+        info = GBMTriggerFile.from_file(self.input()["gbm_file"])
 
-        print(info)
 
         cspec = f"glg_cspec_{self.detector}_bn{self.grb_name[3:]}_{self.version}.pha"
 
@@ -226,30 +225,34 @@ class DownloadTTEResources(luigi.Task):
 
     def run(self):
         base_url = f"https://heasarc.gsfc.nasa.gov/FTP/fermi/data/gbm/triggers/20{self.grb_name.strip('GRB')[:2]}/bn{self.grb_name.strip('GRB')}/current/"
-        missing_tte = lu
-        missing_cspec = lu
+        found_tte = []
+        found_cspec = []
         start = time.time()
-        while len(missing_tte) > 0 and len(missing_cspec) > 0:
+        while len(found_tte) < len(lu) and len(found_cspec) <len(lu):
+            found_one = False
             for d in lu:
-                if d in missing_tte:
+                if d not in found_tte:
                     url = (
                         base_url + f"glg_tte_{d}_bn{self.grb_name.strip('GRB')}_v00.fit"
                     )
                     try:
                         urllib.request.urlopen(url)
-                        missing_tte.pop(d)
+                        found_tte.append(d)
+                        found_one = True
                     except HTTPError:
                         pass
-                if d in missing_cspec:
+                if d not in found_cspec:
                     url = (
                         base_url
                         + f"glg_cspec_{d}_bn{self.grb_name.strip('GRB')}_v00.pha"
                     )
                     try:
                         urllib.request.urlopen(url)
-                        missing_cspec.pop(d)
+                        found_cspec.append(d)
+                        found_one = True
                     except HTTPError:
                         pass
-            time.sleep(180)
-        with self.output().open("w+") as f:
+            if not found_one:
+                time.sleep(180)
+        with self.output().open("w") as f:
             f.write(str(time.time() - start))
