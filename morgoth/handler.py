@@ -26,15 +26,24 @@ def handler(payload, root):
     # parse the trigger XML file
     # and write to yaml
 
-    grb = parse_trigger_file_and_write(root, payload)
+    grb, most_likely = parse_trigger_file_and_write(root, payload)
 
     # form the luigi command
+    if most_likely != "SOLAR_FLARE":
+        cmd = form_morgoth_cmd_string(grb)
 
-    cmd = form_morgoth_cmd_string(grb)
-
-    # launch luigi
-    os.system(" ".join(cmd))
-    # subprocess.Popen(cmd)
+        # launch luigi
+        os.system(" ".join(cmd))
+        # subprocess.Popen(cmd)
+    else:
+        with open(
+            os.path.join(
+                os.environ.get("GBM_TRIGGER_DATA_DIR"), "solare_flares_2024_may.txt"
+            ),
+            "a+",
+        ) as f:
+            f.write(str(grb) + "\n")
+    pass
 
 
 def form_morgoth_cmd_string(grb):

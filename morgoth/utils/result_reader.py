@@ -84,9 +84,13 @@ class ResultReader(object):
         self._read_trigdat_file(trigdat_file)
 
         # Check the GCN Archive for the GRB letter
-        self._grb_name_gcn = check_letter(
-            trigger_number=self._trigger_number, grb_name=self.grb_name
-        )
+        try:
+            self._grb_name_gcn = check_letter(
+                trigger_number=self._trigger_number, grb_name=self.grb_name
+            )
+        except Exception as e:
+            print(e)
+            self._grb_name_gcn = "???"
 
         # Check catalog of bright gamma sources and get separation to GRB position
         self._sep_bright_sources()
@@ -575,68 +579,71 @@ model_param_lookup = {
 
 
 def check_letter(trigger_number, grb_name):
-    """
-    Method to get the GRB Letter from the GCN Archive
-    """
-    try:
-        day = grb_name[3 : 3 + 6]
-        gcn_ids = []
-        used_names = []
-        final_name = "???"
+    """Method to get the GRB Name from the GCN Archive"""
+    the_alphabet = "abcdefghijklmnopqrstuvwxyz"
+    url = "https://gcn.nasa.gov/circulars"
 
-        # Get the GCN archive
-        page = urllib.request.urlopen("https://gcn.gsfc.nasa.gov/gcn3_archive.html")
+    response = urllib.request.urlopen(url)
+    page = response.read().decode()
+    split_page = page.split('{"page":1,"items":[')
+    # get the hidden json representation
+    json_part = split_page[1].split('],"totalPages')[0]
+    # get the entries
+    l = json_part.split("{")
+    # just the ones containing actual data
+    ls = l[1:-1]
+    # list for all GRBs on first pagge
+    grbs = []
+    # iterate over the entries
+    for x in ls:
+        if grb_name.strip("GRB")[:-3] in x:
+            grbs.append(x.strip("},"))
+    # get the gcn numbers for all grb notices
+    gcn_ids = []
+    for x in grbs:
+        y = x.strip('"')
+        y = y.split(",")
+        gcn_ids.append(y[0].strip('circularId":"'))
 
-        # Iterate over all gcn titles
-        for line in page.readlines():
-            line_str = line.decode()
+    grbs_today = []
+    for x in range(len(gcn_ids) - 1, 0, -1):
+        x = gcn_ids[x]
+        # open the json file of the gcn
+        with urllib.request.urlopen(f"{url}/{x}.json") as f:
+            data = json.load(f)
+        subject = data["subject"]
 
-            # Check if the day and "GRB" appear in the line
-            if day in line_str and "GRB " in line_str:
-                # Get the id of the GCN notice and the gcn_name
-                gcn_id = line_str.split("</A>")[0][-5:]
-                gcn_grb_name = line_str.split("GRB ")[1][:7]
-
-                # Check if its a Fermi GBM GCN
-                if "Fermi GBM" in line_str:
-                    # Open the GCN and check if its the same trigger_number
-                    gcn = urllib.request.urlopen(
-                        "https://gcn.gsfc.nasa.gov/gcn3/{}.gcn3".format(gcn_id)
-                    )
-
-                    same_trigger = False
-
-                    for gcn_line in gcn.readlines():
-                        gcn_line_str = gcn_line.decode()
-
-                        if str(trigger_number) in gcn_line_str:
-                            # We found a Fermi GBM GCN with the same trigger number
-                            # So we can use their gcn_grb_name
-                            final_name = gcn_grb_name
-                            break
-
-                gcn_ids.append(gcn_id)
-                used_names.append(gcn_grb_name)
-
-    except Exception as e:
-        print(e)
-        final_name = "???"
-
-    if final_name == "???":
-        # Check if there have been GRBs during that day
-        if len(used_names) > 0:
-            # Get unique values by converting to set and back to list
-            # Then sort this list
-            used_names = list(set(used_names))
-            used_names = sorted(used_names)
-
-            # Now we need to correlate the times to check if its the same GRB
-            # This is currently not implemented and has to be done by hand!
-            print(used_names)
-
-        return final_name
+        # check if the our grb date is in the subject
+        if grb_name[3:-3] in subject:
+            # check if its is from the huntsville team
+            if "Fermi GBM" in subject:
+                # if its from the huntsville team check if the trigger number matches
+                # if so we have a direct match
+                if trigger_number in data["body"]:
+                    gcn = str(data["eventId"]).split()
+                    gcn = "".join(gcn)
+                    return gcn
+            else:
+                # check if it has a eventId field (should always be true but if not
+                # we show that we are not pleased with it)
+                if "eventId" in data.keys():
+                    gcn = str(data["eventId"]).split()
+                    gcn = "".join(gcn)
+                    letter = gcn[-1]
+                    # check if the last char is a letter and not yet mentioned before
+                    if letter not in grbs_today and letter.lower() in the_alphabet:
+                        grbs_today.append(letter.lower())
+                else:
+                    print("WTF", data)
+    # if we do not have any grbs from today we assume it's the first one
+    if len(grbs_today) == 0:
+        return grb_name[:-3] + "A???"
     else:
-        return "GRB{}".format(final_name)
+        # otherwise we add one to the last mentioned letter
+        gt = sorted(grbs_today)
+        last = gt[-1]
+        last_index = the_alphabet.index(last)
+        return grb_name[:-3] + the_alphabet[last_index + 1].upper() + "???"
 
 
 def get_best_fit_with_errors(post_equal_weigts_file, model):
