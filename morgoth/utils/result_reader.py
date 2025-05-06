@@ -417,7 +417,7 @@ class ResultReader(object):
             hour_ra = Angle(table[i]["RA"] + " hours")
             ra = hour_ra.to(unit.deg)
             arc_dec = table[i]["Decl"]
-            #arc_dec_split = tuple(map(float, arc_dec.split(" ")))
+            # arc_dec_split = tuple(map(float, arc_dec.split(" ")))
             dec = Angle(arc_dec, unit=unit.deg)
             coords.append(SkyCoord(ra, dec, frame="icrs"))
 

@@ -199,7 +199,6 @@ class DownloadCSPECFile(luigi.Task):
     def run(self):
         info = GBMTriggerFile.from_file(self.input()["gbm_file"])
 
-
         cspec = f"glg_cspec_{self.detector}_bn{self.grb_name[3:]}_{self.version}.pha"
 
         uri = os.path.join(info.uri, cspec)
@@ -249,16 +248,14 @@ class DownloadTTEResources(luigi.Task):
         found_one = False
         while not found_one:
             d = "n0"
-            url = (
-                base_url + f"glg_tte_{d}_bn{self.grb_name.strip('GRB')}_v00.fit"
-            )
+            url = base_url + f"glg_tte_{d}_bn{self.grb_name.strip('GRB')}_v00.fit"
             try:
                 urllib.request.urlopen(url)
                 found_one = True
             except HTTPError:
                 pass
             if not found_one:
-                if time.time()-start<24*3600:
+                if time.time() - start < 24 * 3600:
                     time.sleep(600)
                 else:
                     break

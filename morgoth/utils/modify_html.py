@@ -44,7 +44,7 @@ def modify_index_html():
         """<link href="lib/AdminLTE/css/skin-green-light.min.css" rel="stylesheet"/>""",
         """<link href="lib/AdminLTE/css/skin-mpe.min.css" rel="stylesheet"/>""",
     )
-    
+
     filedata = filedata.replace(
         """<li><a class="js-nav-link" href="#tab=resource" data-tab="resourceList">Resources</a></li>""",
         """<li><a class="js-nav-link" href="#tab=resource" data-tab="resourceList">Resources</a></li>

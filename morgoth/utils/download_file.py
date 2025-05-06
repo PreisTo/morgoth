@@ -20,7 +20,11 @@ def download_file(url, path="/tmp"):
 
 class BackgroundDownload(object):
     def __init__(
-        self, url, store_path=None, wait_time=60, max_time=60 * 60,
+        self,
+        url,
+        store_path=None,
+        wait_time=60,
+        max_time=60 * 60,
     ):
         """
         An worker to download objects in the background to avoid blocking the GCN
@@ -34,8 +38,8 @@ class BackgroundDownload(object):
         :param description: the description for the bot's plot
         :param wait_time: the wait time interval for checking files
         :param max_time: the max time to wait for files
-        :returns: 
-        :rtype: 
+        :returns:
+        :rtype:
 
         """
 
@@ -101,6 +105,8 @@ class BackgroundDownload(object):
                     time_spent += self._wait_time
 
         if flag:
-            raise AssertionError(f"File not found in {self._max_time} seconds. Maybe try a newer version?")
-        
+            raise AssertionError(
+                f"File not found in {self._max_time} seconds. Maybe try a newer version?"
+            )
+
         return path

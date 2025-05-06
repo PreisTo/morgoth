@@ -1,4 +1,3 @@
-
 import numpy as np
 
 import collections
@@ -69,8 +68,7 @@ class TrigReader(object):
         trigdat = fits.open(trigdat_file)
         self._filename = trigdat_file
         self._out_edge_bgo = np.array(
-            [150.0, 400.0, 850.0, 1500.0, 3000.0,
-                5500.0, 10000.0, 20000.0, 50000.0],
+            [150.0, 400.0, 850.0, 1500.0, 3000.0, 5500.0, 10000.0, 20000.0, 50000.0],
             dtype=np.float32,
         )
         self._out_edge_nai = np.array(
@@ -112,10 +110,8 @@ class TrigReader(object):
         self._tstart[myDelta < 0.1] = np.round(self._tstart[myDelta < 0.1], 4)
         self._tstop[myDelta < 0.1] = np.round(self._tstop[myDelta < 0.1], 4)
 
-        self._tstart[~(myDelta < 0.1)] = np.round(
-            self._tstart[~(myDelta < 0.1)], 3)
-        self._tstop[~(myDelta < 0.1)] = np.round(
-            self._tstop[~(myDelta < 0.1)], 3)
+        self._tstart[~(myDelta < 0.1)] = np.round(self._tstart[~(myDelta < 0.1)], 3)
+        self._tstop[~(myDelta < 0.1)] = np.round(self._tstop[~(myDelta < 0.1)], 3)
 
         if fine:
 
@@ -229,7 +225,7 @@ class TrigReader(object):
                 tstop=self._tstop,
                 mat_type=2,
                 time=0,
-                occult=True
+                occult=True,
             )
 
             # we will use a single response for each detector
@@ -364,8 +360,7 @@ class TrigReader(object):
 
             # then we convert to BL
 
-            time = 0.5 * \
-                (self._time_series[det].tstart + self._time_series[det].tstop)
+            time = 0.5 * (self._time_series[det].tstart + self._time_series[det].tstop)
 
             balrog_like = BALROGLike.from_spectrumlike(speclike, time=time)
 
@@ -387,8 +382,7 @@ class TrigReader(object):
         binned_spectrum_set = time_series.binned_spectrum_set
         counts = []
         width = []
-        bins = binned_spectrum_set.time_intervals.containing_interval(
-            start, stop)
+        bins = binned_spectrum_set.time_intervals.containing_interval(start, stop)
         for bin in bins:
             counts.append(
                 time_series.counts_over_interval(bin.start_time, bin.stop_time)

@@ -68,12 +68,16 @@ def create_report_from_result(result):
                 "balrog_ra_err": result["fit_result"]["ra_err"],
                 "balrog_dec": result["fit_result"]["dec"],
                 "balrog_dec_err": result["fit_result"]["dec_err"],
-                "swift_ra": result["general"]["swift"].get("ra", None)
-                if result["general"]["swift"] is not None
-                else None,
-                "swift_dec": result["general"]["swift"].get("dec", None)
-                if result["general"]["swift"] is not None
-                else None,
+                "swift_ra": (
+                    result["general"]["swift"].get("ra", None)
+                    if result["general"]["swift"] is not None
+                    else None
+                ),
+                "swift_dec": (
+                    result["general"]["swift"].get("dec", None)
+                    if result["general"]["swift"] is not None
+                    else None
+                ),
                 "spec_K": result["fit_result"]["spec_K"],
                 "spec_K_err": result["fit_result"]["spec_K_err"],
                 "spec_index": result["fit_result"]["spec_index"],
