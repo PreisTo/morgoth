@@ -5,7 +5,9 @@ structure = {}
 
 structure["pygcn"] = dict(port=8099)
 structure["luigi"] = dict(n_workers=16)
-structure["multinest"] = dict(n_cores=8, path_to_python="/home/balrog/.environs/test_3.9.11.2/bin/python")
+structure["multinest"] = dict(
+    n_cores=8, path_to_python="/home/balrog/.environs/test_3.9.11.2/bin/python"
+)
 structure["download"] = dict(
     trigdat=dict(
         v00=dict(interval=5, max_time=1800),
@@ -24,15 +26,9 @@ structure["download"] = dict(
     ),
 )
 structure["upload"] = dict(
-    report=dict(
-        interval=2, max_time=1800
-    ),
-    plot=dict(
-        interval=5, max_time=1800
-    ),
-    datafile=dict(
-        interval=5, max_time=1800
-    ),
+    report=dict(interval=2, max_time=1800),
+    plot=dict(interval=5, max_time=1800),
+    datafile=dict(interval=5, max_time=1800),
 )
 
 

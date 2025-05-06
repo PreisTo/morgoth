@@ -81,7 +81,7 @@ class BkgFittingTrigdat(object):
 
     def save_lightcurves(self, dir_path):
         """
-        Save plots of the lightcurves for all dets 
+        Save plots of the lightcurves for all dets
         :param dir_path: Directory path where to save the plots
         :return:
         """
@@ -110,7 +110,7 @@ class BkgFittingTrigdat(object):
 
     def save_bkg_file(self, dir_path):
         """
-        Save the hdf5 file with background polynom information        
+        Save the hdf5 file with background polynom information
         :param dir_path: Directory path where to save the bkg h5 file
         :return:
         """
@@ -316,8 +316,7 @@ class BkgFittingTTE(object):
                 container_type=BinnedSpectrumWithDispersion,
             )
 
-            ts.set_background_interval(
-                background_time_neg, background_time_pos)
+            ts.set_background_interval(background_time_neg, background_time_pos)
             ts.set_active_time_interval(active_time)
             det_ts.append(ts)
 
@@ -325,7 +324,7 @@ class BkgFittingTTE(object):
 
     def save_lightcurves(self, dir_path):
         """
-        Save plots of the lightcurves for all dets 
+        Save plots of the lightcurves for all dets
         :param dir_path: Directory path where to save the plots
         :return:
         """
@@ -351,7 +350,7 @@ class BkgFittingTTE(object):
 
     def save_bkg_file(self, dir_path):
         """
-        Save the hdf5 file with background polynom information        
+        Save the hdf5 file with background polynom information
         :param dir_path: Directory path where to save the bkg h5 file
         :return:
         """

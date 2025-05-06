@@ -1341,13 +1341,7 @@ def phi_0(theta, ra_c, dec_c, rad_r):
     n = (
         -a * c
         + a * d
-        - np.sqrt(
-            a**2 * b**2
-            + b**4
-            - b**2 * c**2
-            + 2 * b**2 * c * d
-            - b**2 * d**2
-        )
+        - np.sqrt(a**2 * b**2 + b**4 - b**2 * c**2 + 2 * b**2 * c * d - b**2 * d**2)
     ) / (a**2 + b**2)
     phi = np.arctan2(z, n)
     return phi
@@ -1381,13 +1375,7 @@ def phi_1(theta, ra_c, dec_c, rad_r):
     n = (
         -a * c
         + a * d
-        + np.sqrt(
-            a**2 * b**2
-            + b**4
-            - b**2 * c**2
-            + 2 * b**2 * c * d
-            - b**2 * d**2
-        )
+        + np.sqrt(a**2 * b**2 + b**4 - b**2 * c**2 + 2 * b**2 * c * d - b**2 * d**2)
     ) / (a**2 + b**2)
     phi = np.arctan2(z, n)
     return phi
