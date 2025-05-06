@@ -3,7 +3,11 @@ import os
 import luigi
 import yaml
 
-from morgoth.auto_loc.time_selection import TimeSelection, TimeSelectionBB
+from morgoth.auto_loc.time_selection import (
+    TimeSelection,  # The classic
+    TimeSelectionBB,  # The stupid
+    TimeSelectionNew,  # The sophisticated stupid
+)
 from morgoth.downloaders import GatherTrigdatDownload, DownloadTrigdat
 
 base_dir = os.environ.get("GBM_TRIGGER_DATA_DIR")
@@ -56,8 +60,11 @@ class TimeSelectionHandler(luigi.Task):
 
             trigdat_file = os.path.join(base_dir, self.grb_name, "trigdat", tf_name)
 
-            time_selection = TimeSelectionBB(
-                grb_name=self.grb_name, trigdat_file=trigdat_file, fine=True
+            time_selection = TimeSelectionNew(
+                grb_name=self.grb_name,
+                trigdat_file=trigdat_file,
+                fine=True,
+                replace_n5=True,
             )
 
             time_selection.save_yaml(
