@@ -29,7 +29,7 @@ class TimeSelectionHandler(luigi.Task):
                     os.path.join(base_dir, "gather_trigdat_complete.yml"), "r"
                 ) as f:
                     trigdat_complete = yaml.safe_load(f)
-                    trigdat_version = trigdat_complete[trigdat_version]
+                    trigdat_version = trigdat_complete["trigdat_version"]
                 return TimeSelectionHandler(
                     grb_name=self.grb_name,
                     version=trigdat_version,
