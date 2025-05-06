@@ -6,16 +6,21 @@ from scipy.special import erfinv
 
 class PoissonResiduals(object):
     """
-    This class implements a way to compute residuals for a Poisson distribution mapping them to residuals of a standard
-    normal distribution. The probability of obtaining the observed counts given the expected one is computed, and then
-    transformed "in unit of sigma", i.e., the sigma value corresponding to that probability is computed.
-    The algorithm implemented here uses different branches so that it is fairly accurate between -36 and +36 sigma.
-    NOTE: if the expected number of counts is not very high, then the Poisson distribution is skewed and so the
-    probability of obtaining a downward fluctuation at a given sigma level is not the same as obtaining the same
-    fluctuation in the upward direction. Therefore, the distribution of residuals is *not* expected to be symmetric
-    in that case. The sigma level at which this effect is visible depends strongly on the expected number of counts.
-    Under normal circumstances residuals are expected to be a few sigma at most, in which case the effect becomes
-    important for expected number of counts <~ 15-20.
+    This class implements a way to compute residuals for a Poisson distribution
+    mapping them to residuals of a standard normal distribution. The probability
+    of obtaining the observed counts given the expected one is computed, and then
+    transformed "in unit of sigma", i.e., the sigma value corresponding to that
+    probability is computed.
+    The algorithm implemented here uses different branches so that it is fairly
+    accurate between -36 and +36 sigma.
+    NOTE: if the expected number of counts is not very high, then the Poisson
+    distribution is skewed and so the probability of obtaining a downward fluctuation
+    at a given sigma level is not the same as obtaining the same fluctuation in the
+    upward direction. Therefore, the distribution of residuals is *not* expected to be
+    symmetric in that case. The sigma level at which this effect is visible depends
+    strongly on the expected number of counts. Under normal circumstances residuals are
+    expected to be a few sigma at most, in which case the effect becomes important for
+    expected number of counts <~ 15-20.
     """
 
     # Putting these here make them part of the *class*, not the instance, i.e., they are created
@@ -484,3 +489,23 @@ def bb_binner(t, x, edges):
         bb_x.append(np.average(avg, axis=0, weights=weights))
 
     return bb_t, bb_x, bb_w
+
+
+def name2id(det):
+    lu = {
+        "n0": 0,
+        "n1": 1,
+        "n2": 2,
+        "n3": 3,
+        "n4": 4,
+        "n5": 5,
+        "n6": 6,
+        "n7": 7,
+        "n8": 8,
+        "n9": 9,
+        "na": 10,
+        "nb": 11,
+        "b0": 12,
+        "b1": 13,
+    }
+    return lu[det]
