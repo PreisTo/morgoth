@@ -863,15 +863,24 @@ class UploadBalrogSwiftPlot(luigi.Task):
         )
 
     def run(self):
-        upload_plot(
-            grb_name=self.grb_name,
-            report_type=self.report_type,
-            plot_file=self.input()["plot_file"].path,
-            plot_type="balrogswift",
-            version=self.version,
-            wait_time=float(morgoth_config["upload"]["plot"]["interval"]),
-            max_time=float(morgoth_config["upload"]["plot"]["max_time"]),
+        failed_path = os.path.join(
+            base_dir,
+            self.grb_name,
+            self.report_type,
+            self.version,
+            "plots",
+            f"{self.grb_name}_balrogswift_plot_{self.report_type}_{self.version}.FAILED",
         )
+        if self.requires()["create_report"].path not in [failed_path]:
+            upload_plot(
+                grb_name=self.grb_name,
+                report_type=self.report_type,
+                plot_file=self.input()["plot_file"].path,
+                plot_type="balrogswift",
+                version=self.version,
+                wait_time=float(morgoth_config["upload"]["plot"]["interval"]),
+                max_time=float(morgoth_config["upload"]["plot"]["max_time"]),
+            )
 
         filename = f"{self.report_type}_{self.version}_upload_plot_balrogswift.done"
         tmp = os.path.join(
