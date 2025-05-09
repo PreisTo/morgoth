@@ -2,20 +2,9 @@ import os
 import shutil
 import time
 
-import astropy.utils.data as astro_data
+from astropy.utils.data import download_file
 
 import morgoth.utils.file_utils as file_utils
-
-
-def download_file(url, path="/tmp"):
-    """
-    Download a file to the given path
-    """
-
-    fname = url.split("/")[-1]
-    f = astro_data.download_file(url)
-
-    return f
 
 
 class BackgroundDownload(object):
@@ -30,11 +19,7 @@ class BackgroundDownload(object):
         An worker to download objects in the background to avoid blocking the GCN
         listen function.
 
-        If a bot is specfied, it will upload an the image with the bot.
-
-
         :param url: The URL to download the file
-        :param bot: the optional bot
         :param description: the description for the bot's plot
         :param wait_time: the wait time interval for checking files
         :param max_time: the max time to wait for files
