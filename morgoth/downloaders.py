@@ -125,7 +125,7 @@ class DownloadTrigdat(luigi.Task):
 
 class DownloadTTEFile(luigi.Task):
     resources = {"max_workers": 1}
-    priority = -100
+    priority = 0
     grb_name = luigi.Parameter()
     version = luigi.Parameter(default="v00")
     detector = luigi.Parameter()
@@ -179,7 +179,7 @@ class DownloadTTEFile(luigi.Task):
 
 class DownloadCSPECFile(luigi.Task):
     resources = {"max_workers": 1}
-    priority = -100
+    priority = 0
     grb_name = luigi.Parameter()
     version = luigi.Parameter(default="v01")
     detector = luigi.Parameter()
@@ -231,7 +231,7 @@ class DownloadCSPECFile(luigi.Task):
 
 class DownloadTTEResources(luigi.Task):
     resources = {"max_workers": 1}
-    priority = 100
+    priority = 0
     grb_name = luigi.Parameter()
 
     def requires(self):
@@ -255,8 +255,8 @@ class DownloadTTEResources(luigi.Task):
             except HTTPError:
                 pass
             if not found_one:
-                if time.time() - start < 24 * 3600:
-                    time.sleep(600)
+                if time.time() - start < 12 * 3600:
+                    time.sleep(1000)
                 else:
                     break
         if found_one:
