@@ -4,6 +4,7 @@ from configya import YAMLConfig
 structure = {}
 
 structure["pygcn"] = dict(port=8099)
+structure["kafka"] = dict(client_id="None", client_secret="None")
 structure["luigi"] = dict(n_workers=16)
 structure["multinest"] = dict(
     n_cores=8, path_to_python="/home/balrog/.environs/test_3.9.11.2/bin/python"
@@ -30,6 +31,7 @@ structure["upload"] = dict(
     plot=dict(interval=5, max_time=1800),
     datafile=dict(interval=5, max_time=1800),
 )
+structure["logging"] = dict(log_level="INFO")
 
 
 class MorgothConfig(YAMLConfig):
