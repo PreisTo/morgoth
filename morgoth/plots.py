@@ -592,30 +592,42 @@ class CreateBalrogSwiftPlot(luigi.Task):
         )
 
     def output(self):
-        filename = (
+        return luigi.LocalTarget(self.file_path)
+
+    def run(self):
+        self.filename = (
             f"{self.grb_name}_balrogswift_plot_{self.report_type}_{self.version}.png"
         )
-        return luigi.LocalTarget(
-            os.path.join(
+        self.file_path = os.path.join(
+            base_dir,
+            self.grb_name,
+            self.report_type,
+            self.version,
+            "plots",
+            self.filename,
+        )
+
+        with self.input()["result_file"].open() as f:
+            result = yaml.safe_load(f)
+        try:
+            swift_gbm_plot(
+                grb_name=self.grb_name,
+                post_equal_weights_file=self.input()["post_equal_weights"].path,
+                model=result["fit_result"]["model"],
+                ra=result["fit_result"]["ra"],
+                dec=result["fit_result"]["dec"],
+                swift=result["general"]["swift"],
+                save_path=self.output().path,
+            )
+        except Exception as e:
+            print(f"Swift Plot Creation failed with {e}")
+            self.filename = f"{self.grb_name}_balrogswift_plot_{self.report_type}_{self.version}.FAILED"
+
+            self.file_path = os.path.join(
                 base_dir,
                 self.grb_name,
                 self.report_type,
                 self.version,
                 "plots",
-                filename,
+                self.filename,
             )
-        )
-
-    def run(self):
-        with self.input()["result_file"].open() as f:
-            result = yaml.safe_load(f)
-
-        swift_gbm_plot(
-            grb_name=self.grb_name,
-            post_equal_weights_file=self.input()["post_equal_weights"].path,
-            model=result["fit_result"]["model"],
-            ra=result["fit_result"]["ra"],
-            dec=result["fit_result"]["dec"],
-            swift=result["general"]["swift"],
-            save_path=self.output().path,
-        )
