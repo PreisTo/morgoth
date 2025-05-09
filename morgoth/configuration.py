@@ -30,6 +30,7 @@ structure["upload"] = dict(
     plot=dict(interval=5, max_time=1800),
     datafile=dict(interval=5, max_time=1800),
 )
+structure["file_version_database"] = str(None)
 
 
 class MorgothConfig(YAMLConfig):
