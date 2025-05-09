@@ -5,16 +5,14 @@ import time
 import astropy.utils.data as astro_data
 
 import morgoth.utils.file_utils as file_utils
+from morgoth.utils.log import logger
 
 
-def download_file(url, path="/tmp"):
+def download_file(url):
     """
     Download a file to the given path
     """
-
-    fname = url.split("/")[-1]
     f = astro_data.download_file(url)
-
     return f
 
 
@@ -83,7 +81,7 @@ class BackgroundDownload(object):
                 flag = False
 
             except:
-
+                logger.debug("No file found - will try again")
                 # ok, we have not found a file yet
 
                 # see if we should still wait for the file
@@ -108,5 +106,4 @@ class BackgroundDownload(object):
             raise AssertionError(
                 f"File not found in {self._max_time} seconds. Maybe try a newer version?"
             )
-
         return path

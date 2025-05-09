@@ -1,10 +1,5 @@
 import logging
-
-import coloredlogs
-
-coloredlogs.install(
-    level="INFO",
-    #                    fmt="%(levelname)s:%(message)s"
-)
+from morgoth.configuration import morgoth_config
 
 logger = logging.getLogger("morgoth")
+logger.setLevel(morgoth_config["logging"]["log_level"])
