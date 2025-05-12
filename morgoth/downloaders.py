@@ -12,6 +12,7 @@ from morgoth.trigger import GBMTriggerFile, OpenGBMFile
 from morgoth.utils import file_utils
 from morgoth.utils.download_file import BackgroundDownload
 from morgoth.utils.env import get_env_value
+from morgoth.utils.mail_utils import get_url
 
 base_dir = get_env_value("GBM_TRIGGER_DATA_DIR")
 lu = [
@@ -30,6 +31,31 @@ lu = [
     "b0",
     "b1",
 ]
+
+
+class FileAvailable(luigi.Task):
+    """
+    Querys the DB to check if file is actually available before downloading
+    """
+
+    grb_name = luigi.Parameter()
+    version = luigi.Parameter()
+    dtype = luigi.Parameter()
+    max_time = luigi.Paramter(default=morgoth_config["file_database"]["max_time"])
+    interval = luigi.Parameter(default=morgoth_config["file_database"]["interval"])
+
+    def run(self):
+        start = 0
+        while start <= self.max_time:
+            url = get_url(grb=self.grb, dtype=self.dtype, version=self.version)
+            if url is not None:
+                break
+            time.sleep(self.interval)
+            start += self.interval
+
+    def output(self):
+        raise NotImplementedError
+        return luigi.LocalTarget()
 
 
 class GatherTrigdatDownload(luigi.Task):
