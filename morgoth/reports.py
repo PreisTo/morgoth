@@ -2,14 +2,18 @@ import luigi
 import os
 
 from morgoth.utils.env import get_env_value
+from morogth.utils.mail_listener import 
 from morgoth.upload import UploadReport, UploadAllPlots, UploadAllDataFiles
 
 base_dir = get_env_value("GBM_TRIGGER_DATA_DIR")
 
 
-class CreateAllPages(luigi.WrapperTask):
+class CreateAllPages(luigi.Task):
     resources = {"max_workers": 1}
     grb_name = luigi.Parameter()
+
+    def run(self):
+        already_run = []
 
     def requires(self):
         return {
