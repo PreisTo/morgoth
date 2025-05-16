@@ -1,5 +1,5 @@
 from configya import YAMLConfig
-
+import os
 
 structure = {}
 
@@ -30,7 +30,13 @@ structure["upload"] = dict(
     plot=dict(interval=5, max_time=1800),
     datafile=dict(interval=5, max_time=1800),
 )
-structure["file_version_database"] = str(None)
+structure["file_database"] = dict(
+    file_version_database=str(
+        os.path.join(os.environ.get("GBM_TRIGGER_DATA_DIR"), "files_available.db")
+    ),
+    max_time=7200,
+    interval=2,
+)
 
 
 class MorgothConfig(YAMLConfig):
