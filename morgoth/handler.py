@@ -43,7 +43,6 @@ def handler(payload, root):
             "a+",
         ) as f:
             f.write(str(grb) + "\n")
-    pass
 
 
 def form_morgoth_cmd_string(grb):
@@ -58,7 +57,7 @@ def form_morgoth_cmd_string(grb):
 
     base_cmd = "luigi --module morgoth "
 
-    cmd = f"{base_cmd} CreateAllPages --grb-name {grb} "
+    cmd = f"{base_cmd} MailListener --grb-name {grb} "
 
     cmd += f"--workers {n_workers} --scheduler-host localhost --log-level INFO &"
 

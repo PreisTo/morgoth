@@ -2,18 +2,46 @@ import luigi
 import os
 
 from morgoth.utils.env import get_env_value
-from morogth.utils.mail_listener import 
+from morgoth.utils.mail_utils import mail_listener
 from morgoth.upload import UploadReport, UploadAllPlots, UploadAllDataFiles
 
 base_dir = get_env_value("GBM_TRIGGER_DATA_DIR")
 
 
-class CreateAllPages(luigi.Task):
+class MailListener(luigi.Task):
     resources = {"max_workers": 1}
     grb_name = luigi.Parameter()
 
     def run(self):
         already_run = []
+        flag = True
+        while flag:
+            new_versions = mail_listener(self.grb_name, already_run)
+            tasks = []
+            for nv in new_versions:
+                if nv.split(".")[0] == "trigdat":
+                    tasks.append(
+                        CreateReportTrigdat(
+                            grb_name=self.grb_name, version=nv.split(".")[1]
+                        )
+                    )
+                    already_run.append(nv)
+                elif nv.split(".")[0] == "tte":
+                    tasks.append(
+                        CreateReportTTE(
+                            grb_name=self.grb_name, version=nv.split(".")[1]
+                        )
+                    )
+                    already_run.append(nv)
+                    flag = False  # assuming the last version is gonna be TTE
+                else:
+                    raise Warning(f"No Report Task for type {nv}")
+            yield tasks
+
+
+class CreateAllPages(luigi.Task):
+    resources = {"max_workers": 1}
+    grb_name = luigi.Parameter()
 
     def requires(self):
         return {
