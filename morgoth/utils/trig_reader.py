@@ -1,20 +1,16 @@
-import numpy as np
-
 import collections
 
-from threeML.utils.spectrum.binned_spectrum import BinnedSpectrumWithDispersion
-from threeML.utils.time_series.binned_spectrum_series import BinnedSpectrumSeries
-from threeML.utils.spectrum.binned_spectrum_set import BinnedSpectrumSet
-from threeML.utils.data_builders.time_series_builder import TimeSeriesBuilder
-from threeML.plugins.DispersionSpectrumLike import DispersionSpectrumLike
-
-from threeML.utils.time_interval import TimeIntervalSet
-
 import astropy.io.fits as fits
-
+import numpy as np
+from gbm_drm_gen.drmgen_trig import DRMGenTrig
 from gbm_drm_gen.io.balrog_drm import BALROG_DRM
 from gbm_drm_gen.io.balrog_like import BALROGLike
-from gbm_drm_gen.drmgen_trig import DRMGenTrig
+from threeML.plugins.DispersionSpectrumLike import DispersionSpectrumLike
+from threeML.utils.data_builders.time_series_builder import TimeSeriesBuilder
+from threeML.utils.spectrum.binned_spectrum import BinnedSpectrumWithDispersion
+from threeML.utils.spectrum.binned_spectrum_set import BinnedSpectrumSet
+from threeML.utils.time_interval import TimeIntervalSet
+from threeML.utils.time_series.binned_spectrum_series import BinnedSpectrumSeries
 
 # This is a holder of the detector names
 

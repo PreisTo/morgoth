@@ -1,8 +1,9 @@
-import numpy as np
-from threeML import *
-import healpy as hp
 import copy
 import os
+
+import healpy as hp
+import numpy as np
+from threeML import *
 
 
 class HealpixMap(object):

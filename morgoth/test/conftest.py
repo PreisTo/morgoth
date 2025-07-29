@@ -1,11 +1,12 @@
-import pytest
-import lxml.etree
 import os
+
+import lxml.etree
+import pytest
 
 os.environ["GBM_TRIGGER_DATA_DIR"] = "./"
 
-from morgoth.utils.package_data import get_path_of_data_file
 from morgoth.trigger import parse_trigger_file_and_write
+from morgoth.utils.package_data import get_path_of_data_file
 
 
 @pytest.fixture(scope="session")

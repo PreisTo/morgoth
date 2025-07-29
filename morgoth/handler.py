@@ -1,6 +1,7 @@
+import os
 import shlex
 import subprocess
-import os
+
 import gcn
 
 from morgoth import morgoth_config

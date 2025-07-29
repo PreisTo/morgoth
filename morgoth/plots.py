@@ -9,11 +9,11 @@ from morgoth.exceptions.custom_exceptions import UnkownReportType
 from morgoth.utils.env import get_env_value
 from morgoth.utils.plot_utils import (
     azimuthal_plot_sat_frame,
+    brightobjects_plot,
     create_corner_all_plot,
     create_corner_loc_plot,
     interactive_3D_plot,
     mollweide_plot,
-    brightobjects_plot,
     swift_gbm_plot,
 )
 

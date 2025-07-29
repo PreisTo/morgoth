@@ -4,22 +4,22 @@ import luigi
 import yaml
 
 from morgoth.balrog_handlers import ProcessFitResults
+from morgoth.configuration import morgoth_config
+from morgoth.data_files import CreateHealpix, CreateHealpixSysErr
 from morgoth.plots import (
     Create3DLocationPlot,
     CreateBalrogSwiftPlot,
+    CreateBrightObjectsLocationPlot,
     CreateCornerPlot,
     CreateLightcurve,
     CreateLocationPlot,
     CreateMollLocationPlot,
-    CreateBrightObjectsLocationPlot,
     CreateSatellitePlot,
     CreateSpectrumPlot,
 )
-from morgoth.data_files import CreateHealpixSysErr, CreateHealpix
-from morgoth.configuration import morgoth_config
-from morgoth.utils.file_utils import if_dir_containing_file_not_existing_then_make
 from morgoth.utils.env import get_env_value
-from morgoth.utils.upload_utils import upload_grb_report, upload_plot, upload_datafile
+from morgoth.utils.file_utils import if_dir_containing_file_not_existing_then_make
+from morgoth.utils.upload_utils import upload_datafile, upload_grb_report, upload_plot
 
 base_dir = get_env_value("GBM_TRIGGER_DATA_DIR")
 

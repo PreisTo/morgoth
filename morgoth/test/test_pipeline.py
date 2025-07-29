@@ -1,17 +1,18 @@
-import luigi
 import os
 import shutil
 import subprocess
-import lxml.etree
 import time
 
+import luigi
+import lxml.etree
+
 os.environ["GBM_TRIGGER_DATA_DIR"] = "./"
-from morgoth.trigger import parse_trigger_file_and_write, OpenGBMFile
-from morgoth.reports import CreateAllPages
-from morgoth.downloaders import DownloadTrigdat
-from morgoth.utils.package_data import get_path_of_data_file
-from morgoth.handler import form_morgoth_cmd_string
 from morgoth.configuration import morgoth_config
+from morgoth.downloaders import DownloadTrigdat
+from morgoth.handler import form_morgoth_cmd_string
+from morgoth.reports import CreateAllPages
+from morgoth.trigger import OpenGBMFile, parse_trigger_file_and_write
+from morgoth.utils.package_data import get_path_of_data_file
 
 for i in range(3):
 

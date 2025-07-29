@@ -3,23 +3,23 @@ import os
 import luigi
 import yaml
 from luigi.contrib.external_program import ExternalProgramTask
+from threeML import loud_mode
 
 from morgoth.bkg_fit_handler import (
-    BackgroundFitTTE,
     BackgroundFitTrigdat,
+    BackgroundFitTTE,
 )
 from morgoth.configuration import morgoth_config
 from morgoth.downloaders import (
     DownloadTrigdat,
-    GatherTrigdatDownload,
     DownloadTTEResources,
+    GatherTrigdatDownload,
 )
 from morgoth.exceptions.custom_exceptions import UnkownReportType
 from morgoth.time_selection_handler import TimeSelectionHandler
 from morgoth.trigger import OpenGBMFile
 from morgoth.utils.env import get_env_value
 from morgoth.utils.result_reader import ResultReader
-from threeML import loud_mode
 
 loud_mode()
 

@@ -1,11 +1,12 @@
 import os
 import re
-from datetime import datetime, timedelta
 import xml.etree.ElementTree as ET
-from lxml import etree
+from datetime import datetime, timedelta
+
 import luigi
 import numpy as np
 import yaml
+from lxml import etree
 
 from morgoth.utils.env import get_env_value
 from morgoth.utils.file_utils import if_directory_not_existing_then_make

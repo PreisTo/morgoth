@@ -1,8 +1,9 @@
-import luigi
 import os
 
+import luigi
+
+from morgoth.upload import UploadAllDataFiles, UploadAllPlots, UploadReport
 from morgoth.utils.env import get_env_value
-from morgoth.upload import UploadReport, UploadAllPlots, UploadAllDataFiles
 
 base_dir = get_env_value("GBM_TRIGGER_DATA_DIR")
 

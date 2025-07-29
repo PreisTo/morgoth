@@ -1,32 +1,25 @@
-from datetime import datetime
-import pytz
+import os
+import ssl
 import urllib
+from datetime import datetime
 
 import astropy.io.fits as fits
 import astropy.time as astro_time
+import astropy.units as unit
 import numpy as np
+import pandas as pd
+import pytz
+import requests
 import yaml
+from astropy.coordinates import Angle, SkyCoord
+from astropy.table import Table
 from chainconsumer import ChainConsumer
-from astropy.coordinates import Angle
-from astropy.coordinates import SkyCoord
+from gbmgeometry import *
+from gbmgeometry.gbm_frame import GBMFrame
 
 from morgoth.exceptions.custom_exceptions import *
 from morgoth.utils.env import get_env_value
-
 from morgoth.utils.swift_check import check_swift
-
-from gbmgeometry.gbm_frame import GBMFrame
-from astropy.coordinates import SkyCoord
-import astropy.units as unit
-
-from astropy.table import Table
-from astropy.coordinates import Angle
-import pandas as pd
-import os, ssl
-import requests
-
-from gbmgeometry import *
-
 
 base_dir = get_env_value("GBM_TRIGGER_DATA_DIR")
 

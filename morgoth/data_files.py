@@ -3,12 +3,11 @@ import os
 import luigi
 import yaml
 
+from morgoth.balrog_handlers import ProcessFitResults
 from morgoth.exceptions.custom_exceptions import UnkownReportType
 from morgoth.utils.env import get_env_value
-from morgoth.balrog_handlers import ProcessFitResults
-
-from morgoth.utils.healpix import healpix_no_sys, healpix_with_sys
 from morgoth.utils.file_utils import if_dir_containing_file_not_existing_then_make
+from morgoth.utils.healpix import healpix_no_sys, healpix_with_sys
 
 base_dir = get_env_value("GBM_TRIGGER_DATA_DIR")
 

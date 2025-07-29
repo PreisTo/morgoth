@@ -7,8 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import plotly
 import plotly.graph_objs as go
-from astropy.coordinates import Angle
-from astropy.coordinates import SkyCoord
+from astropy.coordinates import Angle, SkyCoord
 from chainconsumer import ChainConsumer
 from gbm_drm_gen.io.balrog_healpix_map import BALROGHealpixMap
 from gbmgeometry import gbm_detector_list

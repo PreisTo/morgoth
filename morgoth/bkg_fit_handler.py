@@ -4,11 +4,11 @@ import time
 import luigi
 import yaml
 
-from morgoth.auto_loc.bkg_fit import BkgFittingTTE, BkgFittingTrigdat
+from morgoth.auto_loc.bkg_fit import BkgFittingTrigdat, BkgFittingTTE
 from morgoth.downloaders import (
     DownloadCSPECFile,
-    DownloadTTEFile,
     DownloadTrigdat,
+    DownloadTTEFile,
     GatherTrigdatDownload,
 )
 from morgoth.time_selection_handler import TimeSelectionHandler

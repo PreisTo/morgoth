@@ -1,6 +1,7 @@
-import os
 import csv
+import os
 from datetime import datetime
+
 import numpy as np
 
 swift_data_dir = os.environ.get("SWIFT_VOEVENT_DATA_DIR")

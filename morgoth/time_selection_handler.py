@@ -4,7 +4,7 @@ import luigi
 import yaml
 
 from morgoth.auto_loc.time_selection import TimeSelection, TimeSelectionBB
-from morgoth.downloaders import GatherTrigdatDownload, DownloadTrigdat
+from morgoth.downloaders import DownloadTrigdat, GatherTrigdatDownload
 
 base_dir = os.environ.get("GBM_TRIGGER_DATA_DIR")
 

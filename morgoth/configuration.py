@@ -1,6 +1,5 @@
 from configya import YAMLConfig
 
-
 structure = {}
 
 structure["pygcn"] = dict(port=8099)

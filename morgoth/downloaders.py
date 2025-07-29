@@ -1,11 +1,10 @@
 import os
 import time
+import urllib.request
+from urllib.error import HTTPError
 
 import luigi
 import yaml
-
-import urllib.request
-from urllib.error import HTTPError
 
 from morgoth.configuration import morgoth_config
 from morgoth.trigger import GBMTriggerFile, OpenGBMFile

@@ -1,15 +1,13 @@
-from operator import length_hint
 import os
+from operator import length_hint
 
-import yaml
 import numpy as np
-
+import yaml
 from astropy.stats import bayesian_blocks
-
-from morgoth.utils.trig_reader import TrigReader
-from morgoth.auto_loc.utils.functions_for_auto_loc import *
-
 from threeML.utils.statistics.stats_tools import Significance
+
+from morgoth.auto_loc.utils.functions_for_auto_loc import *
+from morgoth.utils.trig_reader import TrigReader
 
 base_dir = os.environ.get("GBM_TRIGGER_DATA_DIR")
 
