@@ -484,3 +484,23 @@ def bb_binner(t, x, edges):
         bb_x.append(np.average(avg, axis=0, weights=weights))
 
     return bb_t, bb_x, bb_w
+
+
+def name2id(det):
+    lu = {
+        "n0": 0,
+        "n1": 1,
+        "n2": 2,
+        "n3": 3,
+        "n4": 4,
+        "n5": 5,
+        "n6": 6,
+        "n7": 7,
+        "n8": 8,
+        "n9": 9,
+        "na": 10,
+        "nb": 11,
+        "b0": 12,
+        "b1": 13,
+    }
+    return lu[det]
