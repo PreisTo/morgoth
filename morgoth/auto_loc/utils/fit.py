@@ -315,7 +315,7 @@ class MultinestFitTrigdat(object):
                         else:
                             ca.set_ylim(top=max_val * 10e2)
                     for c in spectrum_plot.get_axes():
-                        c.set_xlim(10,30000)
+                        c.set_xlim(10, 30000)
                     spectrum_plot.savefig(plot_path, bbox_inches="tight")
 
                 except Exception as e:
@@ -344,7 +344,7 @@ class MultinestFitTrigdat(object):
                     else:
                         ca.set_ylim(top=max_val * 10e2)
                 for c in spectrum_plot.get_axes():
-                    c.set_xlim(10,30000)
+                    c.set_xlim(10, 30000)
                 spectrum_plot.savefig(plot_path, bbox_inches="tight")
             except Exception as e:
                 print(f"No spectral plot plot possible:\n{e}")
@@ -679,7 +679,7 @@ class MultinestFitTTE(object):
                             ca.set_ylim(top=max_val * 10e2)
 
                     for c in spectrum_plot.get_axes():
-                        c.set_xlim(10,30000)
+                        c.set_xlim(10, 30000)
                     spectrum_plot.savefig(plot_path, bbox_inches="tight")
                 except Exception as e:
                     print(f"No spectral plot possible:\n{e}")
@@ -708,7 +708,7 @@ class MultinestFitTTE(object):
                         ca.set_ylim(top=max_val * 10e2)
 
                 for c in spectrum_plot.get_axes():
-                    c.set_xlim(10,30000)
+                    c.set_xlim(10, 30000)
                 spectrum_plot.savefig(plot_path, bbox_inches="tight")
             except Exception as e:
                 print(f"No spectral plot possible:\n{e}")
