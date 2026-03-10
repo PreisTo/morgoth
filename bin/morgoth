@@ -1,14 +1,34 @@
 #!/usr/bin/env python
-import os
-import gcn
 from morgoth.handler import handler
-from morgoth import morgoth_config
+import yaml
+from lxml.etree import fromstring
+from gcn_kafka import Consumer
 
-testing = False
-if not testing:
-    gcn.listen(host="68.169.57.253", handler=handler, port=morgoth_config["pygcn"]["port"])
-else:
-    from lxml.etree import fromstring
-    import pkg_resources
-    payload = pkg_resources.resource_string('morgoth', '/data/GRB231004.xml')
-    handler(payload, fromstring(payload))
+if __name__ == "__main__":
+    testing = False
+    if not testing:
+        with open(".env.yaml", "r") as f:
+            conf = yaml.safe_load(f)
+
+        # Connect as a consumer (client "morgoth_test")
+        # Warning: don't share the client secret with others.
+        consumer = Consumer(client_id=conf["id"], client_secret=conf["secret"])
+
+        # Subscribe to topics and receive alerts
+        consumer.subscribe(["gcn.classic.voevent.FERMI_GBM_ALERT"])
+        while True:
+            for message in consumer.consume(timeout=1):
+                if message.error():
+                    print(message.error())
+                    continue
+                # Print the topic and message ID
+                print(f"topic={message.topic()}, offset={message.offset()}")
+                value = message.value()
+                print(value)
+                handler(value, fromstring(value))
+
+    else:
+        import pkg_resources
+
+        payload = pkg_resources.resource_string("morgoth", "/data/GRB231004.xml")
+        handler(payload, fromstring(payload))
