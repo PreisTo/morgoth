@@ -1,21 +1,23 @@
 #!/usr/bin/env python
 from morgoth.handler import handler
+from datetime import datetime
 import yaml
 from lxml.etree import fromstring
 from gcn_kafka import Consumer
 
 if __name__ == "__main__":
+    with open(".env.yaml", "r") as f:
+        conf = yaml.safe_load(f)
+
     testing = False
     if not testing:
-        with open(".env.yaml", "r") as f:
-            conf = yaml.safe_load(f)
 
         # Connect as a consumer (client "morgoth_test")
         # Warning: don't share the client secret with others.
         consumer = Consumer(client_id=conf["id"], client_secret=conf["secret"])
 
         # Subscribe to topics and receive alerts
-        consumer.subscribe(["gcn.classic.voevent.FERMI_GBM_ALERT"])
+        consumer.subscribe(["gcn.classic.voevent.FERMI_GBM_FLT_POS"])
         while True:
             for message in consumer.consume(timeout=1):
                 if message.error():
@@ -24,11 +26,37 @@ if __name__ == "__main__":
                 # Print the topic and message ID
                 print(f"topic={message.topic()}, offset={message.offset()}")
                 value = message.value()
-                print(value)
+                print(value.decode("utf-8"))
+
+                # no decoding here!
                 handler(value, fromstring(value))
 
     else:
-        import pkg_resources
+        # import pkg_resources
 
-        payload = pkg_resources.resource_string("morgoth", "/data/GRB231004.xml")
-        handler(payload, fromstring(payload))
+        # payload = pkg_resources.resource_string("morgoth", "/data/GRB231004.xml")
+        # handler(payload, fromstring(payload))
+
+        from confluent_kafka import TopicPartition
+
+        consumer = Consumer(client_id=conf["id"],
+                            client_secret=conf["secret"],
+                            domain='gcn.nasa.gov')
+
+        # get messages occurring 3 days ago
+        timestamp1 = int((datetime.datetime.now() - datetime.timedelta(days=3)).timestamp() * 1000)
+        timestamp2 = timestamp1 + 86400000 # +1 day
+
+        topic = 'gcn.classic.voevent.FERMI_GBM_FLT_POS'
+        start = consumer.offsets_for_times(
+            [TopicPartition(topic, 0, timestamp1)])
+        end = consumer.offsets_for_times(
+            [TopicPartition(topic, 0, timestamp2)])
+
+        consumer.assign(start)
+        for message in consumer.consume(end[0].offset - start[0].offset, timeout=1):
+            value = message.value()
+            print(message.value())
+
+            handler(value, fromstring(value))
+
