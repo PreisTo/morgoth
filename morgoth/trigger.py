@@ -153,9 +153,6 @@ def parse_trigger_file_and_write(root, payload):
 
     # tree = etree.XML(payload)
 
-    with open(os.path.join(directory, "gbm_flight_voe.xml"), "wb") as f:
-        f.write(payload)
-
     return burst_name, most_likely
 
 

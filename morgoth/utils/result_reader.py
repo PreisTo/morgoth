@@ -27,7 +27,6 @@ import requests
 
 from gbmgeometry import *
 
-
 base_dir = get_env_value("GBM_TRIGGER_DATA_DIR")
 
 
