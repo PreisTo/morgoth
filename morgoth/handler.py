@@ -1,7 +1,6 @@
 import shlex
 import subprocess
 import os
-import gcn
 
 from morgoth import morgoth_config
 from morgoth.trigger import parse_trigger_file_and_write
@@ -9,12 +8,9 @@ from morgoth.trigger import parse_trigger_file_and_write
 n_workers = int(morgoth_config["luigi"]["n_workers"])
 
 
-@gcn.include_notice_types(
-    gcn.notice_types.FERMI_GBM_FLT_POS,  # Fermi GBM localization (flight)
-)
 def handler(payload, root):
     """
-    The pygcn handler
+    The gcn handler
 
     :param payload:
     :param root:
