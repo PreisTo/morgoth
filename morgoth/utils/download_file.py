@@ -1,6 +1,13 @@
 import os
 import shutil
 import time
+import time
+from pathlib import Path
+
+import boto3
+from botocore import UNSIGNED
+from botocore.config import Config
+from botocore.exceptions import ClientError, BotoCoreError
 
 import astropy.utils.data as astro_data
 
@@ -110,3 +117,123 @@ class BackgroundDownload(object):
             )
 
         return path
+
+
+class BackgroundDownloadAWS:
+    def __init__(
+        self,
+        key: str,
+        store_path: str | Path,
+        wait_time: float = 30.0,
+        max_time: float = 600.0,
+        bucket: str = "nasa-heasarc",
+    ):
+        """
+        Download one specific file from a public S3 bucket.
+
+        Parameters
+        ----------
+        key : str
+            Full S3 object key, for example:
+            "fermi/data/gbm/triggers/2025/bn250101395/file.fit"
+
+        local_dir : str
+            Local directory created below store_path.
+
+        store_path : str | Path
+            Base path where the file should be stored.
+
+        wait_time : float
+            Seconds to wait between retries if the file is not available.
+
+        max_time : float
+            Maximum total number of seconds to wait.
+
+        bucket : str
+            S3 bucket name.
+        """
+        self.bucket = bucket
+        self.key = key.lstrip("/")
+
+        self.store_path = Path(store_path)
+        self.local_dir = self.store_path
+
+        self.wait_time = wait_time
+        self.max_time = max_time
+
+        self.s3 = boto3.client(
+            "s3",
+            config=Config(signature_version=UNSIGNED),
+        )
+
+    @property
+    def destination(self) -> Path:
+        """Local path of the downloaded file."""
+        return self.local_dir / Path(self.key).name
+
+    def _file_exists(self) -> bool:
+        """Check whether the object exists in S3."""
+        try:
+            self.s3.head_object(
+                Bucket=self.bucket,
+                Key=self.key,
+            )
+            return True
+
+        except ClientError as exc:
+            error_code = exc.response.get("Error", {}).get("Code", "")
+
+            if error_code in {"404", "NoSuchKey", "NotFound"}:
+                return False
+
+            raise
+
+    def _wait_for_file(self) -> None:
+        """Wait until the file becomes available or max_time is exceeded."""
+        start_time = time.monotonic()
+
+        while True:
+            try:
+                if self._file_exists():
+                    return
+
+            except BotoCoreError as exc:
+                print(f"S3 request failed: {exc}")
+
+            elapsed = time.monotonic() - start_time
+
+            if elapsed >= self.max_time:
+                raise TimeoutError(
+                    f"File did not become available within "
+                    f"{self.max_time:.0f} seconds: "
+                    f"s3://{self.bucket}/{self.key}"
+                )
+
+            remaining = self.max_time - elapsed
+            sleep_time = min(self.wait_time, remaining)
+
+            print(
+                f"File not available yet: "
+                f"s3://{self.bucket}/{self.key}. "
+                f"Retrying in {sleep_time:.0f} seconds..."
+            )
+
+            time.sleep(sleep_time)
+
+    def run(self) -> Path:
+        """Wait for the file and download it."""
+        self.local_dir.mkdir(parents=True, exist_ok=True)
+
+        self._wait_for_file()
+
+        destination = self.destination
+
+        print(f"Downloading " f"s3://{self.bucket}/{self.key} " f"-> {destination}")
+
+        self.s3.download_file(
+            self.bucket,
+            self.key,
+            str(destination),
+        )
+
+        return destination

@@ -10,7 +10,7 @@ from urllib.error import HTTPError
 from morgoth.configuration import morgoth_config
 from morgoth.trigger import GBMTriggerFile, OpenGBMFile
 from morgoth.utils import file_utils
-from morgoth.utils.download_file import BackgroundDownload
+from morgoth.utils.download_file import BackgroundDownload, BackgroundDownloadAWS
 from morgoth.utils.env import get_env_value
 
 base_dir = get_env_value("GBM_TRIGGER_DATA_DIR")
@@ -42,7 +42,7 @@ class GatherTrigdatDownload(luigi.Task):
 
     def output(self):
         return luigi.LocalTarget(
-            os.path.join(base_dir, self.grb_name, f"gather_trigdat_complete.yml")
+            os.path.join(base_dir, self.grb_name, "gather_trigdat_complete.yml")
         )
 
     def run(self):
@@ -105,7 +105,7 @@ class DownloadTrigdat(luigi.Task):
         uri = os.path.join(info.uri, trigdat)
 
         store_path = os.path.join(base_dir, info.name, "trigdat")
-        dl = BackgroundDownload(
+        dl = BackgroundDownloadAWS(
             uri,
             store_path,
             wait_time=float(
@@ -161,7 +161,7 @@ class DownloadTTEFile(luigi.Task):
         print(uri)
 
         store_path = os.path.join(base_dir, info.name, "tte", "data")
-        dl = BackgroundDownload(
+        dl = BackgroundDownloadAWS(
             uri,
             store_path,
             wait_time=float(
@@ -216,7 +216,7 @@ class DownloadCSPECFile(luigi.Task):
         print(uri)
 
         store_path = os.path.join(base_dir, info.name, "tte", "data")
-        dl = BackgroundDownload(
+        dl = BackgroundDownloadAWS(
             uri,
             store_path,
             wait_time=float(
@@ -243,7 +243,7 @@ class DownloadTTEResources(luigi.Task):
         )
 
     def run(self):
-        base_url = f"https://heasarc.gsfc.nasa.gov/FTP/fermi/data/gbm/triggers/20{self.grb_name.strip('GRB')[:2]}/bn{self.grb_name.strip('GRB')}/current/"
+        base_url = f"fermi/data/gbm/triggers/20{self.grb_name.strip('GRB')[:2]}/bn{self.grb_name.strip('GRB')}/current/"
         start = time.time()
         found_one = False
         while not found_one:
