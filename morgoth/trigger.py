@@ -122,7 +122,7 @@ def parse_trigger_file_and_write(root, payload):
         main_ftp_directory = main_ftp_directory.replace("http", "https")
 
     uri = main_ftp_directory
-    uri = uri.strip("https://heasarc.gsfc.nasa.gov/FTP/")  # temp fix
+    uri = uri.replace("https://heasarc.gsfc.nasa.gov/FTP/", "")  # temp fix
 
     out_file_writer = GBMTriggerFile(
         trigger_number=trigger_number,
